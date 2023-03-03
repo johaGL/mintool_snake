@@ -1,0 +1,20 @@
+name: minsnake
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.9.12
+  - pip  
+  - numpy
+  - pandas
+  - openpyxl
+  - pyyaml
+  - scikit-learn
+  - scipy
+  - matplotlib
+  - seaborn
+  - statsmodels
+  - bioconda::snakemake=7.24.0
+  
+
