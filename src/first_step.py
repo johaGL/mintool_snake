@@ -53,27 +53,39 @@ if __name__ == "__main__":
     with open(args.config) as f:
         confidic = yaml.load(f, Loader=yaml.Loader)
 
-    print(confidic['rows_path'])
+    outdir = os.path.expanduser(confidic["out_path"])
 
-    if args.supply_2nd_matrix is not None:
-        foo = pd.read_csv(args.supply_2nd_matrix)
+    detect_and_create_dir(f"{outdir}results/")
+    fii = pd.read_csv(confidic['rows_path'], header=0, index_col=0)
+    fii.to_csv(f'{outdir}results/step1-{confidic["suffix"]}.csv')
 
-    fii = pd.read_csv(confidic['rows_path'])
-
-    print("ok here, yes")
-
-    detect_and_create_dir("/home/johanna/mintask_in_out/uconf_a/results/")
-    fii.to_csv("/home/johanna/mintask_in_out/uconf_a/results/xx-yy-omg.csv")
-
-    # for plots, it is ok to create the folders, I think (?) do tests !
-    plots_out = "/home/johanna/mintask_in_out/uconf_a/results/plots/"
+    plots_out = f"/home/johanna/mintask_in_out/uconf_a/results/plots/"
     detect_and_create_dir(plots_out)
-
-    print("ok as well here")
-
     current_palette = sns.color_palette()
     sns.palplot(current_palette)
     plt.savefig(plots_out+"koro.pdf")
+
+    # end step1
+
+    fuu = pd.read_csv(confidic['input_path'], header=0, index_col=0)
+    fuu.index = fii.index
+    sortie2 = fuu.multiply(fii['value'], axis=0)
+    print(sortie2)
+    # using advanced options :
+
+    print(args.multiply_by, " <==")
+
+    if args.supply_2nd_matrix is not None:
+        print("using parameter suppy_2nd_matrix as is injected")
+        foo = pd.read_csv(args.supply_2nd_matrix,  header=0, index_col=0)
+        foo = foo.multiply(args.multiply_by)
+        foo.to_csv(f'{outdir}results/secondMat_procesed-{confidic["suffix"]}.csv')
+
+
+    sortie2.to_csv(f'{outdir}results/step2-{confidic["suffix"]}.csv')
+
+
+
 
 
 
